@@ -1,3 +1,8 @@
 node_modules
 .env
 .vscode
+v1Evidencia.rest
+v1Folio.rest
+v1Foto.rest
+v1Usuario.rest
+v1Vehiculo.rest
