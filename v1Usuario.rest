@@ -1,0 +1,108 @@
+
+// Usuario
+
+###
+GET http://localhost:4000/v1/folio
+###
+POST http://localhost:4000/v1/usuario
+Content-Type: application/json
+
+{
+    "dni": "71555559",
+    "contrasena": "P1980sl.",
+    "nombre": "Andrea",
+    "apellidos": "Baca Medina",
+    "celular": "+51983523963",
+    "idTipoRol": "60bb0f9768bcb70590c9eccc"
+}
+###
+GET http://localhost:4000/v1/folio/60bdaf8f6bf4f02e401699fe
+###
+DELETE  http://localhost:4000/v1/usuario/60bb47477787282fbccda1f7
+###
+PUT http://localhost:4000/v1/usuario/60bb547261bcee4e503c07e3
+Content-Type: application/json
+
+{
+    "dni": "73869994",
+    "contrasena": "P1980sl.",
+    "nombre": "Bruno",
+    "apellidos": "Breña Ramírez",
+    "celular": "+51923563714",
+    "rol": "60bb0fad68bcb70590c9eccd"
+}
+
+// TipoRol
+
+###
+POST http://localhost:4000/v1/tipoRol
+Content-Type: application/json
+
+{
+    "descripcion": "Repartidor"
+}
+###
+GET http://localhost:4000/v1/tipoRol
+
+// Autenticacion
+
+###
+POST http://localhost:4000/v1/usuario/sesion/
+Content-Type: application/json
+
+{
+    "dni": "71555559",
+    "contrasena": "P1980sl."
+}
+
+###
+POST http://localhost:4000/v1/folio
+Content-Type: application/json
+
+{
+    "numeroFolio": "12691566505",
+    "ruta": "1",
+    "nombre": "VERONICA ANDREA GALLARDO",
+    "dni": "45489163",
+    "telefono": "993567298/993567298",
+    "direccion": "MZ.C LT 17, URBANIZACIÓN CERES. A 1 CUADRA DEL PARQUE CERES 1ERA ETAPA.  ",
+    "fechaEntrega": "2021-04-23T00:00:00",
+    "latitud": "-12,02759342",
+    "longitud": "-76,92514991",
+    "distrito": "ATE",
+    "ordenEntrega": "2",
+    "inicioVisita": "829",
+    "finVisita": "835",
+    "descripcionPedido": "MB COCODRILO MONTABLE CONSTRUCCION",
+    "localAbastecimiento": "800"
+}
+
+###
+PUT http://localhost:4000/v1/folio/60bdaf8f6bf4f02e401699fe
+Content-Type: application/json
+
+{
+    "numeroFolio": "12691566505",
+    "ruta": "12",
+    "nombre": "VERONICA ANDREA GALLARDO",
+    "dni": "45489163",
+    "telefono": "993567298/993567298",
+    "direccion": "MZ.C LT 17, URBANIZACIÓN CERES. A 1 CUADRA DEL PARQUE CERES 1ERA ETAPA.  ",
+    "fechaEntrega": "2021-04-23T00:00:00",
+    "latitud": "-12,02759342",
+    "longitud": "-76,92514991",
+    "distrito": "ATE",
+    "ordenEntrega": "2",
+    "inicioVisita": "829",
+    "finVisita": "835",
+    "descripcionPedido": "MB COCODRILO MONTABLE CONSTRUCCION",
+    "localAbastecimiento": "800"
+}
+
+###
+GET http://localhost:4000/v1/ruta
+
+
+{
+    "ruta": ["1","12","15"]
+}
