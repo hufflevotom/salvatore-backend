@@ -19,7 +19,7 @@ app.use("/v1/estadoEvidencia", require('./routes/estadoEvidencia.routes'));
 app.use("/v1/estadoVehiculo", require('./routes/estadoVehiculo.routes'));
 app.use("/v1/evidencia", require('./routes/evidencia.routes'));
 app.use("/v1/folio", require('./routes/folio.routes'));
-app.use("/v1/foto", require('./routes/foto.routes'));
+app.use("/v1/fotoCliente", require('./routes/fotoCliente.routes'));
 app.use("/v1/responsable", require('./routes/responsable.routes'));
 app.use("/v1/ruta", require('./routes/ruta.routes'));
 app.use("/v1/tipoFoto", require('./routes/tipoFoto.routes'));
