@@ -118,6 +118,14 @@ folioController.updateFolio = async (req, res) => {
     res.send({ type: 'success', message: 'Folio actualizado' })
 };
 folioController.deleteFolio = async (req, res) => {
+    const folio = await Folio.findOne({ _id: req.params.id })
+    const detalleentrega = await DetalleEntrega.findOne({ _id: folio.idDetalleEntrega })
+    await UbicacionEntrega.findByIdAndDelete(detalleentrega.idUbicacionEntrega)
+    await HorarioVisita.findByIdAndDelete(detalleentrega.idHorarioVisita)
+    await DetalleCliente.findByIdAndDelete(folio.idDetalleCliente)
+    await DetallePedido.findByIdAndDelete(folio.idDetallePedido)
+    await LocalAbastecimiento.findByIdAndDelete(folio.idLocalAbastecimiento)
+    await DetalleEntrega.findByIdAndDelete(folio.idDetalleEntrega)
     await Folio.findByIdAndDelete(req.params.id)
     res.send({ type: 'success', message: 'Folio borrado' })
 };
