@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const path = require('path');
 const PORT = process.env.PORT || 4000;
 const app = express();
 
@@ -10,7 +11,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.get('/', function(req, res){
-    res.send('Salvatore-Project')
+    res.sendFile(path.resolve(__dirname,'public/index.html'))
 })
 app.use("/v1/vehiculo", require('./routes/vehiculo.routes'));
 app.use("/v1/usuario", require('./routes/usuario.routes'));
