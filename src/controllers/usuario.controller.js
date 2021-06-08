@@ -44,26 +44,38 @@ usuarioController.getUsuario = async (req, res) => {
 usuarioController.updateUsuario = async (req, res) => {
     const errores = [];
     const { dni, contrasena, nombre, apellidos, celular, idTipoRol, brevete } = req.body;
-    if (!/^\d{8}(?:[-\s]\d{4})?$/.test(dni)) {
-        errores.push({ message: 'El DNI debe tener 8 números' })
+    if (dni) {
+        if (!/^\d{8}(?:[-\s]\d{4})?$/.test(dni)) {
+            errores.push({ message: 'El DNI debe tener 8 números' })
+        }
     }
-    if (celular.length < 8 || !/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im.test(celular)) {
-        errores.push({ message: 'El celular debe ser válido' })
+    if (celular) {
+        if (celular.length < 8 || !/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im.test(celular)) {
+            errores.push({ message: 'El celular debe ser válido' })
+        }
     }
-    if (nombre.length == 0 || /[0-9]/.test(nombre)) {
-        errores.push({ message: 'El nombre debe ser válido' })
+    if (nombre) {
+        if (nombre.length == 0 || /[0-9]/.test(nombre)) {
+            errores.push({ message: 'El nombre debe ser válido' })
+        }
     }
-    if (apellidos.length == 0 || /[0-9]/.test(apellidos)) {
-        errores.push({ message: 'Los apellidos deben ser válidos' })
+    if (apellidos) {
+        if (apellidos.length == 0 || /[0-9]/.test(apellidos)) {
+            errores.push({ message: 'Los apellidos deben ser válidos' })
+        }
     }
-    if (contrasena.length < 6) {
-        errores.push({ message: 'La contraseña debe tener 6 caracteres como mínimo' })
+    if (contrasena) {
+        if (contrasena.length < 6) {
+            errores.push({ message: 'La contraseña debe tener 6 caracteres como mínimo' })
+        }
     }
     if (errores.length > 0) {
         res.send({ type: 'error', errores })
     } else {
-        const r = new Usuario({ dni, contrasena, nombre, apellidos, celular, idTipoRol, brevete })
-        req.body.contrasena = await r.encriptarContrasena(contrasena)
+        if (contrasena) {
+            const r = new Usuario({ dni, contrasena, nombre, apellidos, celular, idTipoRol, brevete })
+            req.body.contrasena = await r.encriptarContrasena(contrasena)
+        }
         await Usuario.findByIdAndUpdate(req.params.id, req.body)
         res.send({ type: 'success', message: 'Usuario actualizado' })
     }
@@ -79,8 +91,8 @@ usuarioController.iniciarSesion = async (req, res) => {
     } else {
         const r = await usuario.compararContrasena(req.body.contrasena, usuario.contrasena);
         if (r) {
-            const tipo = await TipoUsuario.findOne({_id: usuario.idTipoRol})
-            res.send({ type: 'success', message: 'Bienvenido '+tipo.descripcion })
+            const tipo = await TipoUsuario.findOne({ _id: usuario.idTipoRol })
+            res.send({ type: 'success', message: 'Bienvenido ' + tipo.descripcion })
         } else {
             res.send({ type: 'error', message: 'Contraseña incorrecta' })
         }
