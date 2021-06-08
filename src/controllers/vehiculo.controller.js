@@ -6,7 +6,7 @@ vehiculoController.getVehiculos = async (req, res) => {
 };
 vehiculoController.createVehiculo = async (req, res) => {
     const errores = [];
-    const { placa, marca, color, modelo, fechaCompra, idTipoVehiculo, idEstadoVehiculo } = req.body;
+    const { placa, marca, color, modelo, fechaFabricacion, idEstadoVehiculo, vencimientoSoat, vencimientoRevision } = req.body;
     const vehiculo = await Usuario.findOne({ placa: req.body.placa });
     if (!vehiculo) {
         if (!/[a-zA-Z]{3}[0-9]{2}[a-zA-Z0-9]/.test(placa)) {
@@ -21,11 +21,14 @@ vehiculoController.createVehiculo = async (req, res) => {
         if (modelo.length == 0) {
             errores.push({ message: 'El modelo debe ser válido' })
         }
-        if (fechaCompra.length == 0 || /^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(fechaCompra)) {
-            errores.push({ message: 'La fecha de compra debe ser válida' })
+        if (fechaFabricacion.length == 0 || /^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(fechaFabricacion)) {
+            errores.push({ message: 'La fecha de fabricación debe ser válida' })
         }
-        if (idTipoVehiculo.length == 0) {
-            errores.push({ message: 'El tipo de vehículo es necesario' })
+        if (vencimientoSoat.length == 0 || /^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(vencimientoSoat)) {
+            errores.push({ message: 'La fecha de vencimiento del SOAT debe ser válida' })
+        }
+        if (vencimientoRevision.length == 0 || /^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(vencimientoRevision)) {
+            errores.push({ message: 'La fecha de vencimiento de la revisión técnica debe ser válida' })
         }
         if (idEstadoVehiculo.length == 0) {
             errores.push({ message: 'El estado del vehículo es necesario' })
@@ -36,7 +39,7 @@ vehiculoController.createVehiculo = async (req, res) => {
     if (errores.length > 0) {
         res.send({ type: 'error', errores })
     } else {
-        const r = new Vehiculo({ placa, marca, color, modelo, fechaCompra, idTipoVehiculo, idEstadoVehiculo })
+        const r = new Vehiculo({ placa, marca, color, modelo, fechaFabricacion, idEstadoVehiculo, vencimientoSoat, vencimientoRevision })
         await r.save()
         res.send({ type: 'success', message: 'Vehiculo creado' })
     }
@@ -60,14 +63,17 @@ vehiculoController.updateVehiculo = async (req, res) => {
     if (modelo.length == 0) {
         errores.push({ message: 'El modelo debe ser válido' })
     }
-    if (fechaCompra.length == 0 || /^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(fechaCompra)) {
-        errores.push({ message: 'La fecha de compra debe ser válida' })
+    if (fechaFabricacion.length == 0 || /^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(fechaFabricacion)) {
+        errores.push({ message: 'La fecha de fabricación debe ser válida' })
     }
-    if (idTipoVehiculo.length == 0) {
-        errores.push({ message: 'El tipo de vehículo es necesario' })
+    if (vencimientoSoat.length == 0 || /^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(vencimientoSoat)) {
+        errores.push({ message: 'La fecha de vencimiento del SOAT debe ser válida' })
     }
-    if (idEstadoVehiculo.length < 6) {
-        errores.push({ message: 'El estado de vehículo es necesario' })
+    if (vencimientoRevision.length == 0 || /^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(vencimientoRevision)) {
+        errores.push({ message: 'La fecha de vencimiento de la revisión técnica debe ser válida' })
+    }
+    if (idEstadoVehiculo.length == 0) {
+        errores.push({ message: 'El estado del vehículo es necesario' })
     }
     if (errores.length > 0) {
         res.send({ type: 'error', errores })

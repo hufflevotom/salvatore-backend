@@ -7,7 +7,8 @@ const responsableSchema = new Schema({
     idVehiculo: {
         type: Schema.Types.ObjectId,
         ref: 'Vehiculo', required: true
-    }
+    },
+    ruta: { type: String, required: true },
 }, {
     timestamps: true,
     versionKey: false,

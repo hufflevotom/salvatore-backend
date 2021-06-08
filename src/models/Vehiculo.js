@@ -4,15 +4,13 @@ const vehiculoSchema = new Schema({
     marca: { type: String, required: true },
     color: { type: String, required: true },
     modelo: { type: String, required: false },
-    fechaCompra: { type: Date, required: false },
-    idTipoVehiculo: {
-        type: Schema.Types.ObjectId,
-        ref: 'TipoVehiculo', required: false
-    },
+    fechaFabricacion: { type: Date, required: false },
     idEstadoVehiculo: {
         type: Schema.Types.ObjectId,
         ref: 'EstadoVehiculo', required: true
-    }
+    },
+    vencimientoSoat: { type: Date, required: false },
+    vencimientoRevision: { type: Date, required: false }
 }, {
     timestamps: true,
     versionKey: false,

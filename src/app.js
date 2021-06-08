@@ -24,7 +24,6 @@ app.use("/v1/responsable", require('./routes/responsable.routes'));
 app.use("/v1/ruta", require('./routes/ruta.routes'));
 app.use("/v1/tipoFoto", require('./routes/tipoFoto.routes'));
 app.use("/v1/tipoRol", require('./routes/tipoRol.routes'));
-app.use("/v1/tipoVehiculo", require('./routes/tipoVehiculo.routes'));
 app.use("/v1/usuario", require('./routes/usuario.routes'));
 app.use("/v1/vehiculo", require('./routes/vehiculo.routes'));
 
