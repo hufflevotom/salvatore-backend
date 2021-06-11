@@ -1,11 +1,11 @@
 const usuarioController = {}
 const Usuario = require('../models/Usuario')
 const TipoUsuario = require('../models/TipoRol')
-usuarioController.getUsuarios = async (req, res) => {
+usuarioController.getUsuarios = async(req, res) => {
     const r = await Usuario.find()
     res.json(r)
 };
-usuarioController.createUsuario = async (req, res) => {
+usuarioController.createUsuario = async(req, res) => {
     const errores = [];
     const { dni, contrasena, nombre, apellidos, celular, idTipoRol, brevete } = req.body;
     const usuario = await Usuario.findOne({ dni: req.body.dni });
@@ -37,11 +37,11 @@ usuarioController.createUsuario = async (req, res) => {
         res.send({ type: 'success', message: 'Usuario creado' })
     }
 };
-usuarioController.getUsuario = async (req, res) => {
+usuarioController.getUsuario = async(req, res) => {
     const r = await Usuario.findOne({ _id: req.params.id })
     res.send(r)
 };
-usuarioController.updateUsuario = async (req, res) => {
+usuarioController.updateUsuario = async(req, res) => {
     const errores = [];
     const { dni, contrasena, nombre, apellidos, celular, idTipoRol, brevete } = req.body;
     if (dni) {
@@ -80,11 +80,11 @@ usuarioController.updateUsuario = async (req, res) => {
         res.send({ type: 'success', message: 'Usuario actualizado' })
     }
 };
-usuarioController.deleteUsuario = async (req, res) => {
+usuarioController.deleteUsuario = async(req, res) => {
     await Usuario.findByIdAndDelete(req.params.id)
     res.send({ type: 'success', message: 'Usuario borrado' })
 };
-usuarioController.iniciarSesion = async (req, res) => {
+usuarioController.iniciarSesion = async(req, res) => {
     const usuario = await Usuario.findOne({ dni: req.body.dni })
     if (!usuario) {
         res.send({ type: 'error', message: 'El usuario no existe' })
@@ -92,7 +92,7 @@ usuarioController.iniciarSesion = async (req, res) => {
         const r = await usuario.compararContrasena(req.body.contrasena, usuario.contrasena);
         if (r) {
             const tipo = await TipoUsuario.findOne({ _id: usuario.idTipoRol })
-            res.send({ type: 'success', message: 'Bienvenido ' + tipo.descripcion })
+            res.send({ type: 'success', message: 'Bienvenido ' + tipo.descripcion, data: usuario })
         } else {
             res.send({ type: 'error', message: 'Contraseña incorrecta' })
         }
