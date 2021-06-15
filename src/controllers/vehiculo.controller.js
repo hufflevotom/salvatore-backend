@@ -9,29 +9,45 @@ vehiculoController.createVehiculo = async(req, res) => {
     const { placa, marca, color, modelo, fechaFabricacion, idEstadoVehiculo, vencimientoSoat, vencimientoRevision } = req.body;
     const vehiculo = await Vehiculo.findOne({ placa: req.body.placa });
     if (!vehiculo) {
-        if (!/[a-zA-Z]{3}[0-9]{2}[a-zA-Z0-9]/.test(placa)) {
-            errores.push({ message: 'La placa debe ser valida' })
+        if (placa) {
+            if (!/[a-zA-Z]{3}[0-9]{2}[a-zA-Z0-9]/.test(placa)) {
+                errores.push({ message: 'La placa debe ser valida' })
+            }
         }
-        if (marca.length == 0) {
-            errores.push({ message: 'La marca debe ser válida' })
+        if (marca) {
+            if (marca.length == 0) {
+                errores.push({ message: 'La marca debe ser válida' })
+            }
         }
-        if (color.length == 0) {
-            errores.push({ message: 'El color debe ser válido' })
+        if (color) {
+            if (color.length == 0) {
+                errores.push({ message: 'El color debe ser válido' })
+            }
         }
-        if (modelo.length == 0) {
-            errores.push({ message: 'El modelo debe ser válido' })
+        if (modelo) {
+            if (modelo.length == 0) {
+                errores.push({ message: 'El modelo debe ser válido' })
+            }
         }
-        if (fechaFabricacion.length == 0 || /^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(fechaFabricacion)) {
-            errores.push({ message: 'La fecha de fabricación debe ser válida' })
+        if (fechaFabricacion) {
+            if (fechaFabricacion.length == 0 || /^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(fechaFabricacion)) {
+                errores.push({ message: 'La fecha de fabricación debe ser válida' })
+            }
         }
-        if (vencimientoSoat.length == 0 || /^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(vencimientoSoat)) {
-            errores.push({ message: 'La fecha de vencimiento del SOAT debe ser válida' })
+        if (vencimientoSoat) {
+            if (vencimientoSoat.length == 0 || /^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(vencimientoSoat)) {
+                errores.push({ message: 'La fecha de vencimiento del SOAT debe ser válida' })
+            }
         }
-        if (vencimientoRevision.length == 0 || /^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(vencimientoRevision)) {
-            errores.push({ message: 'La fecha de vencimiento de la revisión técnica debe ser válida' })
+        if (vencimientoRevision) {
+            if (vencimientoRevision.length == 0 || /^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(vencimientoRevision)) {
+                errores.push({ message: 'La fecha de vencimiento de la revisión técnica debe ser válida' })
+            }
         }
-        if (idEstadoVehiculo.length == 0) {
-            errores.push({ message: 'El estado del vehículo es necesario' })
+        if (idEstadoVehiculo) {
+            if (idEstadoVehiculo.length == 0) {
+                errores.push({ message: 'El estado del vehículo es necesario' })
+            }
         }
     } else {
         errores.push({ message: 'La placa ya existe' })
