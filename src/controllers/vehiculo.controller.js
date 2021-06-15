@@ -1,13 +1,13 @@
 const vehiculoController = {}
 const Vehiculo = require('../models/Vehiculo')
-vehiculoController.getVehiculos = async (req, res) => {
+vehiculoController.getVehiculos = async(req, res) => {
     const r = await Vehiculo.find()
     res.json(r)
 };
-vehiculoController.createVehiculo = async (req, res) => {
+vehiculoController.createVehiculo = async(req, res) => {
     const errores = [];
     const { placa, marca, color, modelo, fechaFabricacion, idEstadoVehiculo, vencimientoSoat, vencimientoRevision } = req.body;
-    const vehiculo = await Usuario.findOne({ placa: req.body.placa });
+    const vehiculo = await Vehiculo.findOne({ placa: req.body.placa });
     if (!vehiculo) {
         if (!/[a-zA-Z]{3}[0-9]{2}[a-zA-Z0-9]/.test(placa)) {
             errores.push({ message: 'La placa debe ser valida' })
@@ -44,11 +44,11 @@ vehiculoController.createVehiculo = async (req, res) => {
         res.send({ type: 'success', message: 'Vehiculo creado' })
     }
 };
-vehiculoController.getVehiculo = async (req, res) => {
+vehiculoController.getVehiculo = async(req, res) => {
     const r = await Vehiculo.findOne({ _id: req.params.id })
     res.send(r)
 };
-vehiculoController.updateVehiculo = async (req, res) => {
+vehiculoController.updateVehiculo = async(req, res) => {
     const errores = [];
     const { placa, marca, color, modelo, fechaCompra, idTipoVehiculo, idEstadoVehiculo } = req.body;
     if (!/[a-zA-Z]{3}[0-9]{2}[a-zA-Z0-9]/.test(placa)) {
@@ -82,7 +82,7 @@ vehiculoController.updateVehiculo = async (req, res) => {
         res.send({ type: 'success', message: 'Vehiculo actualizado' })
     }
 };
-vehiculoController.deleteVehiculo = async (req, res) => {
+vehiculoController.deleteVehiculo = async(req, res) => {
     await Vehiculo.findByIdAndDelete(req.params.id)
     res.send({ type: 'success', message: 'Vehiculo borrado' })
 };
