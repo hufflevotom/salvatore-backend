@@ -44,29 +44,60 @@ folioController.getFolios = async(req, res) => {
     res.send(folio)
 };
 folioController.createFolio = async(req, res) => {
-    //TODO: Validar el numero de folio
+    //TODO: Validar el numero de folio 
+    const errores = [];
     const { numeroFolio, ruta, nombre, dni, telefono, direccion, fechaEntrega, latitud, longitud, distrito, ordenEntrega, inicioVisita, finVisita, descripcionPedido, localAbastecimiento } = req.body;
-    const idDetalleCliente = mongoose.Types.ObjectId();
-    const idUbicacionEntrega = mongoose.Types.ObjectId();
-    const idHorarioVisita = mongoose.Types.ObjectId();
-    const idDetalleEntrega = mongoose.Types.ObjectId();
-    const idDetallePedido = mongoose.Types.ObjectId();
-    const idLocalAbastecimiento = mongoose.Types.ObjectId();
-    const cliente = new DetalleCliente({ _id: idDetalleCliente, nombre, dni, telefono, direccion })
-    const ubicacion = new UbicacionEntrega({ _id: idUbicacionEntrega, latitud, longitud, distrito })
-    const horario = new HorarioVisita({ _id: idHorarioVisita, inicioVisita, finVisita })
-    const pedido = new DetallePedido({ _id: idDetallePedido, descripcionPedido })
-    const local = new LocalAbastecimiento({ _id: idLocalAbastecimiento, localAbastecimiento })
-    await cliente.save();
-    await ubicacion.save();
-    await horario.save();
-    const entrega = new DetalleEntrega({ _id: idDetalleEntrega, fechaEntrega, idUbicacionEntrega, ordenEntrega, idHorarioVisita })
-    await entrega.save();
-    await pedido.save();
-    await local.save();
-    const r = new Folio({ numeroFolio, ruta, idDetalleCliente, idDetalleEntrega, idDetallePedido, idLocalAbastecimiento })
-    await r.save()
-    res.send({ type: 'success', message: 'Folio creado' })
+    const folio = await Folio.findOne({ numeroFolio: req.body.numeroFolio });
+    if (!folio) {
+        if (!/^[0-9]+$/.test(numeroFolio)) {
+            errores.push({ message: 'numeroFolio debe ser válida' })
+        }
+        if (!/^[0-9]+$/.test(ruta)) {
+            errores.push({ message: 'La ruta debe ser válida' })
+        }
+        if (!/^\d{8}(?:[-\s]\d{4})?$/.test(dni)) {
+            errores.push({ message: 'dni debe ser válida' })
+        }
+        if (!/^[0-9]$/.test(ordenEntrega)) {
+            errores.push({ message: 'ordenEntrega debe ser válida' })
+        }
+        if (!/^[0-9]+$/.test(inicioVisita)) {
+            errores.push({ message: 'inicioVisita debe ser válida' })
+        }
+        if (!/^[0-9]+$/.test(finVisita)) {
+            errores.push({ message: 'finVisita debe ser válida' })
+        }
+        if (!/^[a-zA-ZáÁéÉíÍóÓúÚñÑüÜ\s]+$/.test(nombre)) {
+            errores.push({ message: 'nombre debe ser válida' })
+        }
+    } else {
+        errores.push({ message: 'El folio ' + numeroFolio + ' ya existe' })
+    }
+    if (errores.length > 0) {
+        res.send({ type: 'error', errores })
+    } else {
+        const idDetalleCliente = mongoose.Types.ObjectId();
+        const idUbicacionEntrega = mongoose.Types.ObjectId();
+        const idHorarioVisita = mongoose.Types.ObjectId();
+        const idDetalleEntrega = mongoose.Types.ObjectId();
+        const idDetallePedido = mongoose.Types.ObjectId();
+        const idLocalAbastecimiento = mongoose.Types.ObjectId();
+        const cliente = new DetalleCliente({ _id: idDetalleCliente, nombre, dni, telefono, direccion })
+        const ubicacion = new UbicacionEntrega({ _id: idUbicacionEntrega, latitud, longitud, distrito })
+        const horario = new HorarioVisita({ _id: idHorarioVisita, inicioVisita, finVisita })
+        const pedido = new DetallePedido({ _id: idDetallePedido, descripcionPedido })
+        const local = new LocalAbastecimiento({ _id: idLocalAbastecimiento, localAbastecimiento })
+        await cliente.save();
+        await ubicacion.save();
+        await horario.save();
+        const entrega = new DetalleEntrega({ _id: idDetalleEntrega, fechaEntrega, idUbicacionEntrega, ordenEntrega, idHorarioVisita })
+        await entrega.save();
+        await pedido.save();
+        await local.save();
+        const r = new Folio({ numeroFolio, ruta, idDetalleCliente, idDetalleEntrega, idDetallePedido, idLocalAbastecimiento })
+        await r.save()
+        res.send({ type: 'success', message: 'Folio creado' })
+    }
 };
 folioController.getFolio = async(req, res) => {
     const r = await Folio.findOne({ _id: req.params.id })
