@@ -8,7 +8,7 @@ const DetallePedido = require('../models/DetallePedido')
 const LocalAbastecimiento = require('../models/LocalAbastecimiento')
 const DetalleEntrega = require('../models/DetalleEntrega')
 const moment = require('moment')
-folioController.getFolios = async (req, res) => {
+folioController.getFolios = async(req, res) => {
     const folio = await Folio.find()
         .populate({
             path: 'idDetalleCliente',
@@ -18,8 +18,7 @@ folioController.getFolios = async (req, res) => {
         .populate({
             path: 'idDetalleEntrega',
             model: 'DetalleEntrega',
-            populate: [
-                {
+            populate: [{
                     path: 'idUbicacionEntrega',
                     model: 'UbicacionEntrega',
                     select: ['latitud', 'longitud', 'distrito']
@@ -44,7 +43,8 @@ folioController.getFolios = async (req, res) => {
         })
     res.send(folio)
 };
-folioController.createFolio = async (req, res) => {
+folioController.createFolio = async(req, res) => {
+    //TODO: Validar el numero de folio
     const { numeroFolio, ruta, nombre, dni, telefono, direccion, fechaEntrega, latitud, longitud, distrito, ordenEntrega, inicioVisita, finVisita, descripcionPedido, localAbastecimiento } = req.body;
     const idDetalleCliente = mongoose.Types.ObjectId();
     const idUbicacionEntrega = mongoose.Types.ObjectId();
@@ -68,7 +68,7 @@ folioController.createFolio = async (req, res) => {
     await r.save()
     res.send({ type: 'success', message: 'Folio creado' })
 };
-folioController.getFolio = async (req, res) => {
+folioController.getFolio = async(req, res) => {
     const r = await Folio.findOne({ _id: req.params.id })
         .populate({
             path: 'idDetalleCliente',
@@ -78,8 +78,7 @@ folioController.getFolio = async (req, res) => {
         .populate({
             path: 'idDetalleEntrega',
             model: 'DetalleEntrega',
-            populate: [
-                {
+            populate: [{
                     path: 'idUbicacionEntrega',
                     model: 'UbicacionEntrega',
                     select: ['latitud', 'longitud', 'distrito']
@@ -104,7 +103,7 @@ folioController.getFolio = async (req, res) => {
         })
     res.send(r)
 };
-folioController.updateFolio = async (req, res) => {
+folioController.updateFolio = async(req, res) => {
     const { numeroFolio, ruta, nombre, dni, telefono, direccion, fechaEntrega, latitud, longitud, distrito, ordenEntrega, inicioVisita, finVisita, descripcionPedido, localAbastecimiento } = req.body;
     const folio = await Folio.findOne({ _id: req.params.id })
     const detalleentrega = await DetalleEntrega.findOne({ _id: folio.idDetalleEntrega })
@@ -115,9 +114,10 @@ folioController.updateFolio = async (req, res) => {
     await LocalAbastecimiento.findByIdAndUpdate(folio.idLocalAbastecimiento, { localAbastecimiento })
     await DetalleEntrega.findByIdAndUpdate(folio.idDetalleEntrega, { fechaEntrega, ordenEntrega })
     await Folio.findByIdAndUpdate(req.params.id, { numeroFolio, ruta })
+        //TODO: Validar numero de folio
     res.send({ type: 'success', message: 'Folio actualizado' })
 };
-folioController.deleteFolio = async (req, res) => {
+folioController.deleteFolio = async(req, res) => {
     const folio = await Folio.findOne({ _id: req.params.id })
     const detalleentrega = await DetalleEntrega.findOne({ _id: folio.idDetalleEntrega })
     await UbicacionEntrega.findByIdAndDelete(detalleentrega.idUbicacionEntrega)
@@ -129,7 +129,7 @@ folioController.deleteFolio = async (req, res) => {
     await Folio.findByIdAndDelete(req.params.id)
     res.send({ type: 'success', message: 'Folio borrado' })
 };
-folioController.getRutas = async (req, res) => {
+folioController.getRutas = async(req, res) => {
     const today = moment().startOf('day')
     const rutas = await Folio.find({
         createdAt: {
