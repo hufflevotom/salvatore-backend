@@ -3,12 +3,14 @@ const detalleEntregaSchema = new Schema({
     fechaEntrega: { type: Date, required: false },
     idUbicacionEntrega: {
         type: Schema.Types.ObjectId,
-        ref: 'UbicacionEntrega', required: true
+        ref: 'UbicacionEntrega',
+        required: true
     },
     ordenEntrega: { type: Number, required: true },
     idHorarioVisita: {
         type: Schema.Types.ObjectId,
-        ref: 'HorarioVisita', required: true
+        ref: 'HorarioVisita',
+        required: true
     }
 }, {
     timestamps: true,
