@@ -1,0 +1,37 @@
+{
+    "name": [{
+            "Folio": 12691729665,
+            "IdRuta": 6,
+            "Descripcion": "VERENYS BALDEON",
+            "Direccion": "AVENIDA PASEO DE LA REPÚBLICA 3583  ",
+            "Localidad": "SAN ISIDRO",
+            "Orden": 1,
+            "Inicio visita": 814,
+            "Fin visita": 820,
+            "Latitud": -12.100102092576941,
+            "Longitud": -77.02614278736772,
+            "Dni": 70192278,
+            "Producto": "JEAN CONTINUIDAD GRIS 0 16",
+            "Telefono": "986655367/986655367",
+            "LocalAbastece": 800,
+            "FechaPactada": "2021-04-23T00:00:00"
+        },
+        {
+            "Folio": 12692299648,
+            "IdRuta": 6,
+            "Descripcion": "GABRIELA QUISPE",
+            "Direccion": "CALLE LOS CISNES 326 DPTO.102  ",
+            "Localidad": "SAN ISIDRO",
+            "Orden": 2,
+            "Inicio visita": 822,
+            "Fin visita": 828,
+            "Latitud": -12.1003650058471,
+            "Longitud": -77.0240563070676,
+            "Dni": 41247919,
+            "Producto": "ZAPATILLA X Ray 40.5",
+            "Telefono": "969773642/",
+            "LocalAbastece": 800,
+            "FechaPactada": "2021-04-23T00:00:00"
+        }
+    ]
+}

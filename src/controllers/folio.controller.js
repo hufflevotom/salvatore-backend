@@ -213,58 +213,101 @@ folioController.getRutas = async(req, res) => {
     res.send(rutas)
 }
 folioController.cargarFolios = async(req, res) => {
-    const errores = [];
     const { name } = req.body;
-    const folio = await Folio.findOne({ numeroFolio: req.body.numeroFolio });
-    if (!folio) {
-        if (!/^[0-9]+$/.test(numeroFolio)) {
-            errores.push({ message: 'numeroFolio debe ser válida' })
+    const clientes = [];
+    const ubicaciones = [];
+    const horarios = [];
+    const pedidos = [];
+    const locales = [];
+    const entregas = [];
+    const folios = [];
+    const errores = [];
+    for (var i = 0; i < name.length; i++) {
+        var FolioActual = name[i];
+        if (!/^[0-9]+$/.test(FolioActual.Folio)) {
+            errores.push({ message: 'El numero de Folio: ' + FolioActual.Folio + ' debe ser válido' })
         }
-        if (!/^[0-9]+$/.test(ruta)) {
-            errores.push({ message: 'La ruta debe ser válida' })
+        if (!/^[0-9]+$/.test(FolioActual.IdRuta)) {
+            errores.push({ message: 'La ruta: ' + FolioActual.IdRuta + ' del folio ' + FolioActual.Folio + ' debe ser válida' })
         }
-        if (!/^\d{8}(?:[-\s]\d{4})?$/.test(dni)) {
-            errores.push({ message: 'dni debe ser válida' })
+        if (!/^\d{8}(?:[-\s]\d{4})?$/.test(FolioActual.Dni)) {
+            errores.push({ message: 'El dni: ' + FolioActual.Dni + ' del folio ' + FolioActual.Folio + ' debe ser válido' })
         }
-        if (!/^[0-9]$/.test(ordenEntrega)) {
-            errores.push({ message: 'ordenEntrega debe ser válida' })
+        if (!/^[0-9]$/.test(FolioActual.Orden)) {
+            errores.push({ message: 'El orden de entrega: ' + FolioActual.Orden + ' del folio ' + FolioActual.Folio + ' debe ser válido' })
         }
-        if (!/^[0-9]+$/.test(inicioVisita)) {
-            errores.push({ message: 'inicioVisita debe ser válida' })
+        if (!/^[0-9]+$/.test(FolioActual.InicioVisita)) {
+            errores.push({ message: 'El inicio de visita: ' + FolioActual.InicioVisita + ' del folio ' + FolioActual.Folio + ' debe ser válido' })
         }
-        if (!/^[0-9]+$/.test(finVisita)) {
-            errores.push({ message: 'finVisita debe ser válida' })
+        if (!/^[0-9]+$/.test(FolioActual.FinVisita)) {
+            errores.push({ message: 'El fin de visita: ' + FolioActual.FinVisita + ' del folio ' + FolioActual.Folio + ' debe ser válido' })
         }
-        if (!/^[a-zA-ZáÁéÉíÍóÓúÚñÑüÜ\s]+$/.test(nombre)) {
-            errores.push({ message: 'nombre debe ser válida' })
+        if (!/^[a-zA-ZáÁéÉíÍóÓúÚñÑüÜ\s]+$/.test(FolioActual.Descripcion)) {
+            errores.push({ message: 'El nombre: ' + FolioActual.Descripcion + ' del folio ' + FolioActual.Folio + ' debe ser válido' })
         }
-    } else {
-        errores.push({ message: 'El folio ' + numeroFolio + ' ya existe' })
+        if (errores.length == 0) {
+            const idDetalleCliente = mongoose.Types.ObjectId();
+            const idUbicacionEntrega = mongoose.Types.ObjectId();
+            const idHorarioVisita = mongoose.Types.ObjectId();
+            const idDetalleEntrega = mongoose.Types.ObjectId();
+            const idDetallePedido = mongoose.Types.ObjectId();
+            const idLocalAbastecimiento = mongoose.Types.ObjectId();
+            clientes.push({
+                _id: `${idDetalleCliente}`,
+                nombre: `${FolioActual.Descripcion}`,
+                dni: `${FolioActual.Dni}`,
+                telefono: `${FolioActual.Telefono}`,
+                direccion: `${FolioActual.Direccion}`
+            })
+            ubicaciones.push({
+                _id: `${idUbicacionEntrega}`,
+                latitud: `${FolioActual.Latitud}`,
+                longitud: `${FolioActual.Longitud}`,
+                distrito: `${FolioActual.Localidad}`
+            })
+            horarios.push({
+                _id: `${idHorarioVisita}`,
+                inicioVisita: `${FolioActual.InicioVisita}`,
+                finVisita: `${FolioActual.FinVisita}`
+            })
+            pedidos.push({
+                _id: `${idDetallePedido}`,
+                descripcionPedido: `${FolioActual.Producto}`
+            })
+            locales.push({
+                _id: `${idLocalAbastecimiento}`,
+                localAbastecimiento: `${FolioActual.LocalAbastece}`
+            })
+            entregas.push({
+                _id: `${idDetalleEntrega}`,
+                fechaEntrega: `${FolioActual.FechaPactada}`,
+                idUbicacionEntrega: `${idUbicacionEntrega}`,
+                ordenEntrega: `${FolioActual.Orden}`,
+                idHorarioVisita: `${idHorarioVisita}`
+            })
+            folios.push({
+                numeroFolio: `${FolioActual.Folio}`,
+                ruta: `${FolioActual.IdRuta}`,
+                idDetalleCliente: `${idDetalleCliente}`,
+                idDetalleEntrega: `${idDetalleEntrega}`,
+                idDetallePedido: `${idDetallePedido}`,
+                idLocalAbastecimiento: `${idLocalAbastecimiento}`
+            })
+        }
     }
     if (errores.length > 0) {
         res.send({ type: 'error', errores })
     } else {
-        const idDetalleCliente = mongoose.Types.ObjectId();
-        const idUbicacionEntrega = mongoose.Types.ObjectId();
-        const idHorarioVisita = mongoose.Types.ObjectId();
-        const idDetalleEntrega = mongoose.Types.ObjectId();
-        const idDetallePedido = mongoose.Types.ObjectId();
-        const idLocalAbastecimiento = mongoose.Types.ObjectId();
-        const cliente = new DetalleCliente({ _id: idDetalleCliente, nombre, dni, telefono, direccion })
-        const ubicacion = new UbicacionEntrega({ _id: idUbicacionEntrega, latitud, longitud, distrito })
-        const horario = new HorarioVisita({ _id: idHorarioVisita, inicioVisita, finVisita })
-        const pedido = new DetallePedido({ _id: idDetallePedido, descripcionPedido })
-        const local = new LocalAbastecimiento({ _id: idLocalAbastecimiento, localAbastecimiento })
-        await cliente.save();
-        await ubicacion.save();
-        await horario.save();
-        const entrega = new DetalleEntrega({ _id: idDetalleEntrega, fechaEntrega, idUbicacionEntrega, ordenEntrega, idHorarioVisita })
-        await entrega.save();
-        await pedido.save();
-        await local.save();
-        const r = new Folio({ numeroFolio, ruta, idDetalleCliente, idDetalleEntrega, idDetallePedido, idLocalAbastecimiento })
-        await r.save()
-        res.send({ type: 'success', message: 'Folio creado' })
+        // const cliente = new DetalleCliente()
+        // const ubicacion = new UbicacionEntrega()
+        // const horario = new HorarioVisita()
+        // const entrega = new DetalleEntrega()
+        // const pedido = new DetallePedido()
+        // const local = new LocalAbastecimiento()
+        // const folio = new Folio()
+        //TODO: db.collection.insertMany()
+        // await cliente.insertMany(clientes);
+        res.send({ type: 'success', message: 'Folios creados' })
     }
 }
 module.exports = folioController;
