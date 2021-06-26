@@ -305,8 +305,9 @@ folioController.cargarFolios = async(req, res) => {
         // const pedido = new DetallePedido()
         // const local = new LocalAbastecimiento()
         // const folio = new Folio()
-        //TODO: db.collection.insertMany()
-        // await cliente.insertMany(clientes);
+        console.log(clientes)
+            //TODO: db.collection.insertMany()
+            // await cliente.insertMany(clientes);
         res.send({ type: 'success', message: 'Folios creados' })
     }
 }
