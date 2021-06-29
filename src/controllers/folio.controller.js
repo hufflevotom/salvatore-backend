@@ -236,9 +236,6 @@ folioController.cargarFolios = async(req, res) => {
         if (!/^[0-9]+$/.test(FolioActual.FinVisita)) {
             errores.push({ message: 'El fin de visita: ' + FolioActual.FinVisita + ' del folio ' + FolioActual.Folio + ' debe ser válido' })
         }
-        if (!/^[a-zA-ZáÁéÉíÍóÓúÚñÑüÜ\s]+$/.test(FolioActual.Descripcion)) {
-            errores.push({ message: 'El nombre: ' + FolioActual.Descripcion + ' del folio ' + FolioActual.Folio + ' debe ser válido' })
-        }
         if (errores.length == 0) {
             const idDetalleCliente = mongoose.Types.ObjectId();
             const idUbicacionEntrega = mongoose.Types.ObjectId();
