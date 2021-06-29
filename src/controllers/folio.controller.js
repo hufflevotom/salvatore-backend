@@ -230,12 +230,6 @@ folioController.cargarFolios = async(req, res) => {
         if (!/^[0-9]+$/.test(FolioActual.IdRuta)) {
             errores.push({ message: 'La ruta: ' + FolioActual.IdRuta + ' del folio ' + FolioActual.Folio + ' debe ser válida' })
         }
-        if (!/^\d{8}(?:[-\s]\d{4})?$/.test(FolioActual.Dni)) {
-            errores.push({ message: 'El dni: ' + FolioActual.Dni + ' del folio ' + FolioActual.Folio + ' debe ser válido' })
-        }
-        if (!/^[0-9]$/.test(FolioActual.Orden)) {
-            errores.push({ message: 'El orden de entrega: ' + FolioActual.Orden + ' del folio ' + FolioActual.Folio + ' debe ser válido' })
-        }
         if (!/^[0-9]+$/.test(FolioActual.InicioVisita)) {
             errores.push({ message: 'El inicio de visita: ' + FolioActual.InicioVisita + ' del folio ' + FolioActual.Folio + ' debe ser válido' })
         }
