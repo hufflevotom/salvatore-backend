@@ -289,16 +289,41 @@ folioController.cargarFolios = async(req, res) => {
     if (errores.length > 0) {
         res.send({ type: 'error', errores })
     } else {
-        // const cliente = new DetalleCliente()
-        // const ubicacion = new UbicacionEntrega()
-        // const horario = new HorarioVisita()
-        // const entrega = new DetalleEntrega()
-        // const pedido = new DetallePedido()
-        // const local = new LocalAbastecimiento()
-        // const folio = new Folio()
-        console.log(clientes)
-            //TODO: db.collection.insertMany()
-            // await cliente.insertMany(clientes);
+        await DetalleCliente.insertMany(clientes).then(function() {
+            console.log("Data inserted")
+        }).catch(function(error) {
+            console.log(error)
+        });
+        await UbicacionEntrega.insertMany(ubicaciones).then(function() {
+            console.log("Data inserted")
+        }).catch(function(error) {
+            console.log(error)
+        });
+        await HorarioVisita.insertMany(horarios).then(function() {
+            console.log("Data inserted")
+        }).catch(function(error) {
+            console.log(error)
+        });
+        await DetallePedido.insertMany(pedidos).then(function() {
+            console.log("Data inserted")
+        }).catch(function(error) {
+            console.log(error)
+        });
+        await LocalAbastecimiento.insertMany(locales).then(function() {
+            console.log("Data inserted")
+        }).catch(function(error) {
+            console.log(error)
+        });
+        await DetalleEntrega.insertMany(entregas).then(function() {
+            console.log("Data inserted")
+        }).catch(function(error) {
+            console.log(error)
+        });
+        await Folio.insertMany(folios).then(function() {
+            console.log("Data inserted")
+        }).catch(function(error) {
+            console.log(error)
+        });
         res.send({ type: 'success', message: 'Folios creados' })
     }
 }
