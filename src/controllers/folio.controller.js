@@ -327,4 +327,46 @@ folioController.cargarFolios = async(req, res) => {
         res.send({ type: 'success', message: 'Folios creados' })
     }
 }
+folioController.getFoliosActuales = async(req, res) => {
+    const today = moment().startOf('day')
+    const rutas = await Folio.find({
+            createdAt: {
+                $gte: today.toDate(),
+                $lte: moment(today).endOf('day').toDate()
+            }
+        }).populate({
+            path: 'idDetalleCliente',
+            model: 'DetalleCliente',
+            select: ['nombre', 'dni', 'telefono', 'direccion']
+        })
+        .populate({
+            path: 'idDetalleEntrega',
+            model: 'DetalleEntrega',
+            populate: [{
+                    path: 'idUbicacionEntrega',
+                    model: 'UbicacionEntrega',
+                    select: ['latitud', 'longitud', 'distrito']
+                },
+                {
+                    path: 'idHorarioVisita',
+                    model: 'HorarioVisita',
+                    select: ['inicioVisita', 'finVisita']
+                },
+            ],
+            select: ['fechaEntrega', 'idUbicacionEntrega', 'ordenEntrega', 'idHorarioVisita']
+        })
+        .populate({
+            path: 'idDetallePedido',
+            model: 'DetallePedido',
+            select: ['descripcionPedido']
+        })
+        .populate({
+            path: 'idLocalAbastecimiento',
+            model: 'LocalAbastecimiento',
+            select: ['localAbastecimiento']
+        })
+        .sort({ ruta: 1 })
+        // .distinct('ruta')
+    res.send(rutas)
+}
 module.exports = folioController;
