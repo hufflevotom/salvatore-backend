@@ -366,7 +366,6 @@ folioController.getFoliosActuales = async(req, res) => {
             select: ['localAbastecimiento']
         })
         .sort({ ruta: 1 })
-        // .distinct('ruta')
     res.send(rutas)
 }
 module.exports = folioController;
