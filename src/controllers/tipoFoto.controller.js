@@ -1,24 +1,24 @@
 const tipoFotoController = {}
 const TipoFoto = require('../models/TipoFoto')
-tipoFotoController.getTipoFotos = async (req, res) => {
+tipoFotoController.getTipoFotos = async(req, res) => {
     const r = await TipoFoto.find()
-    res.json(r)
+    res.status(200).send(r)
 };
-tipoFotoController.createTipoFoto = async (req, res) => {
+tipoFotoController.createTipoFoto = async(req, res) => {
     const r = new TipoFoto(req.body)
     await r.save()
-    res.send({ message: 'TipoFoto creado' })
+    res.status(201).send({ type: 'success', message: 'TipoFoto creado' })
 };
-tipoFotoController.getTipoFoto = async (req, res) => {
+tipoFotoController.getTipoFoto = async(req, res) => {
     const r = await TipoFoto.findOne({ _id: req.params.id })
-    res.send(r)
+    res.status(200).send(r)
 };
-tipoFotoController.updateTipoFoto = async (req, res) => {
+tipoFotoController.updateTipoFoto = async(req, res) => {
     await TipoFoto.findByIdAndUpdate(req.params.id, req.body)
-    res.json({ status: 'TipoFoto actualizado' })
+    res.status(204).send({ type: 'success', message: 'TipoFoto actualizado' })
 };
-tipoFotoController.deleteTipoFoto = async (req, res) => {
+tipoFotoController.deleteTipoFoto = async(req, res) => {
     await TipoFoto.findByIdAndDelete(req.params.id)
-    res.json({ status: 'TipoFoto borrado' })
+    res.status(204).send({ type: 'success', message: 'TipoFoto borrado' })
 };
 module.exports = tipoFotoController;

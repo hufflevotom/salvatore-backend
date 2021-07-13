@@ -2,7 +2,7 @@ const vehiculoController = {}
 const Vehiculo = require('../models/Vehiculo')
 vehiculoController.getVehiculos = async(req, res) => {
     const r = await Vehiculo.find()
-    res.json(r)
+    res.status(200).json(r)
 };
 vehiculoController.createVehiculo = async(req, res) => {
     const errores = [];
@@ -37,16 +37,16 @@ vehiculoController.createVehiculo = async(req, res) => {
         errores.push({ message: 'La placa ya existe' })
     }
     if (errores.length > 0) {
-        res.send({ type: 'error', errores })
+        res.status(409).send({ type: 'error', errores })
     } else {
         const r = new Vehiculo({ placa, marca, color, modelo, fechaFabricacion, idEstadoVehiculo, vencimientoSoat, vencimientoRevision })
         await r.save()
-        res.send({ type: 'success', message: 'Vehiculo creado' })
+        res.status(201).send({ type: 'success', message: 'Vehiculo creado' })
     }
 };
 vehiculoController.getVehiculo = async(req, res) => {
     const r = await Vehiculo.findOne({ _id: req.params.id })
-    res.send(r)
+    res.status(200).send(r)
 };
 vehiculoController.updateVehiculo = async(req, res) => {
     const errores = [];
@@ -76,14 +76,14 @@ vehiculoController.updateVehiculo = async(req, res) => {
         errores.push({ message: 'El estado del vehículo es necesario' })
     }
     if (errores.length > 0) {
-        res.send({ type: 'error', errores })
+        res.status(409).send({ type: 'error', errores })
     } else {
         await Vehiculo.findByIdAndUpdate(req.params.id, req.body)
-        res.send({ type: 'success', message: 'Vehiculo actualizado' })
+        res.status(204).send({ type: 'success', message: 'Vehiculo actualizado' })
     }
 };
 vehiculoController.deleteVehiculo = async(req, res) => {
     await Vehiculo.findByIdAndDelete(req.params.id)
-    res.send({ type: 'success', message: 'Vehiculo borrado' })
+    res.status(204).send({ type: 'success', message: 'Vehiculo borrado' })
 };
 module.exports = vehiculoController;

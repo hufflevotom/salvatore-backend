@@ -41,7 +41,7 @@ folioController.getFolios = async(req, res) => {
             model: 'LocalAbastecimiento',
             select: ['localAbastecimiento']
         })
-    res.send(folio)
+    res.status(200).send(folio)
 };
 folioController.createFolio = async(req, res) => {
     const errores = [];
@@ -73,7 +73,7 @@ folioController.createFolio = async(req, res) => {
         errores.push({ message: 'El folio ' + numeroFolio + ' ya existe' })
     }
     if (errores.length > 0) {
-        res.send({ type: 'error', errores })
+        res.status(409).send({ type: 'error', errores })
     } else {
         const idDetalleCliente = mongoose.Types.ObjectId();
         const idUbicacionEntrega = mongoose.Types.ObjectId();
@@ -95,7 +95,7 @@ folioController.createFolio = async(req, res) => {
         await local.save();
         const r = new Folio({ numeroFolio, ruta, idDetalleCliente, idDetalleEntrega, idDetallePedido, idLocalAbastecimiento })
         await r.save()
-        res.send({ type: 'success', message: 'Folio creado' })
+        res.status(201).send({ type: 'success', message: 'Folio creado' })
     }
 };
 folioController.getFolio = async(req, res) => {
@@ -131,7 +131,7 @@ folioController.getFolio = async(req, res) => {
             model: 'LocalAbastecimiento',
             select: ['localAbastecimiento']
         })
-    res.send(r)
+    res.status(200).send(r)
 };
 folioController.updateFolio = async(req, res) => {
     const errores = [];
@@ -177,7 +177,7 @@ folioController.updateFolio = async(req, res) => {
         errores.push({ message: 'El folio ' + numeroFolio + ' no existe' })
     }
     if (errores.length > 0) {
-        res.send({ type: 'error', errores })
+        res.status(409).send({ type: 'error', errores })
     } else {
         const detalleentrega = await DetalleEntrega.findOne({ _id: folio.idDetalleEntrega })
         await UbicacionEntrega.findByIdAndUpdate(detalleentrega.idUbicacionEntrega, { latitud, longitud, distrito })
@@ -187,7 +187,7 @@ folioController.updateFolio = async(req, res) => {
         await LocalAbastecimiento.findByIdAndUpdate(folio.idLocalAbastecimiento, { localAbastecimiento })
         await DetalleEntrega.findByIdAndUpdate(folio.idDetalleEntrega, { fechaEntrega, ordenEntrega })
         await Folio.findByIdAndUpdate(req.params.id, { numeroFolio, ruta })
-        res.send({ type: 'success', message: 'Folio actualizado' })
+        res.status(204).send({ type: 'success', message: 'Folio actualizado' })
     }
 };
 folioController.deleteFolio = async(req, res) => {
@@ -200,7 +200,7 @@ folioController.deleteFolio = async(req, res) => {
     await LocalAbastecimiento.findByIdAndDelete(folio.idLocalAbastecimiento)
     await DetalleEntrega.findByIdAndDelete(folio.idDetalleEntrega)
     await Folio.findByIdAndDelete(req.params.id)
-    res.send({ type: 'success', message: 'Folio borrado' })
+    res.status(204).send({ type: 'success', message: 'Folio borrado' })
 };
 folioController.getRutas = async(req, res) => {
     const today = moment().startOf('day')
@@ -210,7 +210,7 @@ folioController.getRutas = async(req, res) => {
             $lte: moment(today).endOf('day').toDate()
         }
     }, { ruta: 1 }).sort({ ruta: 1 }).distinct('ruta')
-    res.send(rutas)
+    res.status(200).send(rutas)
 }
 folioController.cargarFolios = async(req, res) => {
     const { name } = req.body;
@@ -287,7 +287,7 @@ folioController.cargarFolios = async(req, res) => {
         }
     }
     if (errores.length > 0) {
-        res.send({ type: 'error', errores })
+        res.status(409).send({ type: 'error', errores })
     } else {
         await DetalleCliente.insertMany(clientes).then(function() {
             console.log("Data inserted")
@@ -324,7 +324,7 @@ folioController.cargarFolios = async(req, res) => {
         }).catch(function(error) {
             console.log(error)
         });
-        res.send({ type: 'success', message: 'Folios creados' })
+        res.status(201).send({ type: 'success', message: 'Folios creados' })
     }
 }
 folioController.getFoliosActuales = async(req, res) => {
@@ -366,6 +366,6 @@ folioController.getFoliosActuales = async(req, res) => {
             select: ['localAbastecimiento']
         })
         .sort({ ruta: 1 })
-    res.send(rutas)
+    res.status(200).send(rutas)
 }
 module.exports = folioController;

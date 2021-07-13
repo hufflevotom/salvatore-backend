@@ -1,24 +1,24 @@
 const estadoVehiculoController = {}
 const EstadoVehiculo = require('../models/EstadoVehiculo')
-estadoVehiculoController.getEstadoVehiculos = async (req, res) => {
+estadoVehiculoController.getEstadoVehiculos = async(req, res) => {
     const r = await EstadoVehiculo.find()
-    res.json(r)
+    res.status(200).json(r)
 };
-estadoVehiculoController.createEstadoVehiculo = async (req, res) => {
+estadoVehiculoController.createEstadoVehiculo = async(req, res) => {
     const r = new EstadoVehiculo(req.body)
     await r.save()
-    res.send({ message: 'EstadoVehiculo creado' })
+    res.status(201).send({ message: 'EstadoVehiculo creado' })
 };
-estadoVehiculoController.getEstadoVehiculo = async (req, res) => {
+estadoVehiculoController.getEstadoVehiculo = async(req, res) => {
     const r = await EstadoVehiculo.findOne({ _id: req.params.id })
-    res.send(r)
+    res.status(200).send(r)
 };
-estadoVehiculoController.updateEstadoVehiculo = async (req, res) => {
+estadoVehiculoController.updateEstadoVehiculo = async(req, res) => {
     await EstadoVehiculo.findByIdAndUpdate(req.params.id, req.body)
-    res.json({ status: 'EstadoVehiculo actualizado' })
+    res.status(204).json({ status: 'EstadoVehiculo actualizado' })
 };
-estadoVehiculoController.deleteEstadoVehiculo = async (req, res) => {
+estadoVehiculoController.deleteEstadoVehiculo = async(req, res) => {
     await EstadoVehiculo.findByIdAndDelete(req.params.id)
-    res.json({ status: 'EstadoVehiculo borrado' })
+    res.status(204).json({ status: 'EstadoVehiculo borrado' })
 };
 module.exports = estadoVehiculoController;

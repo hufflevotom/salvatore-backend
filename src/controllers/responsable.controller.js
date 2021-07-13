@@ -1,6 +1,6 @@
 const responsableController = {}
 const Responsable = require('../models/Responsable')
-responsableController.getResponsables = async (req, res) => {
+responsableController.getResponsables = async(req, res) => {
     const r = await Responsable.find()
         .populate({
             path: 'idUsuario',
@@ -12,14 +12,14 @@ responsableController.getResponsables = async (req, res) => {
             model: 'Vehiculo',
             select: ['placa', 'marca', 'color', 'modelo']
         })
-    res.json(r)
+    res.status(200).json(r)
 };
-responsableController.createResponsable = async (req, res) => {
+responsableController.createResponsable = async(req, res) => {
     const r = new Responsable(req.body)
     await r.save()
-    res.send({ message: 'Responsable creado' })
+    res.status(201).send({ type: 'success', message: 'Responsable creado' })
 };
-responsableController.getResponsable = async (req, res) => {
+responsableController.getResponsable = async(req, res) => {
     const r = await Responsable.findOne({ _id: req.params.id })
         .populate({
             path: 'idUsuario',
@@ -31,14 +31,14 @@ responsableController.getResponsable = async (req, res) => {
             model: 'Vehiculo',
             select: ['placa', 'marca', 'color', 'modelo']
         })
-    res.send(r)
+    res.status(200).send(r)
 };
-responsableController.updateResponsable = async (req, res) => {
+responsableController.updateResponsable = async(req, res) => {
     await Responsable.findByIdAndUpdate(req.params.id, req.body)
-    res.json({ status: 'Responsable actualizado' })
+    res.status(204).send({ type: 'success', message: 'Responsable actualizado' })
 };
-responsableController.deleteResponsable = async (req, res) => {
+responsableController.deleteResponsable = async(req, res) => {
     await Responsable.findByIdAndDelete(req.params.id)
-    res.json({ status: 'Responsable borrado' })
+    res.status(204).send({ type: 'success', message: 'Responsable borrado' })
 };
 module.exports = responsableController;
