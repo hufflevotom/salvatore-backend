@@ -8,17 +8,20 @@ const DetallePedido = require('../models/DetallePedido')
 const LocalAbastecimiento = require('../models/LocalAbastecimiento')
 const DetalleEntrega = require('../models/DetalleEntrega')
 const moment = require('moment')
-folioController.getFolios = async(req, res) => {
-    const folio = await Folio.find()
-        .populate({
-            path: 'idDetalleCliente',
-            model: 'DetalleCliente',
-            select: ['nombre', 'dni', 'telefono', 'direccion']
-        })
-        .populate({
-            path: 'idDetalleEntrega',
-            model: 'DetalleEntrega',
-            populate: [{
+folioController.getFolios = async (req, res) => {
+    const folio = await Folio.paginate({}, {
+        limit: req.query.limit || 10,
+        page: req.query.page || 1,
+        populate: [
+            {
+                path: 'idDetalleCliente',
+                model: 'DetalleCliente',
+                select: ['nombre', 'dni', 'telefono', 'direccion']
+            },
+            {
+                path: 'idDetalleEntrega',
+                model: 'DetalleEntrega',
+                populate: [{
                     path: 'idUbicacionEntrega',
                     model: 'UbicacionEntrega',
                     select: ['latitud', 'longitud', 'distrito']
@@ -28,22 +31,24 @@ folioController.getFolios = async(req, res) => {
                     model: 'HorarioVisita',
                     select: ['inicioVisita', 'finVisita']
                 },
-            ],
-            select: ['fechaEntrega', 'idUbicacionEntrega', 'ordenEntrega', 'idHorarioVisita']
-        })
-        .populate({
-            path: 'idDetallePedido',
-            model: 'DetallePedido',
-            select: ['descripcionPedido']
-        })
-        .populate({
-            path: 'idLocalAbastecimiento',
-            model: 'LocalAbastecimiento',
-            select: ['localAbastecimiento']
-        })
+                ],
+                select: ['fechaEntrega', 'idUbicacionEntrega', 'ordenEntrega', 'idHorarioVisita']
+            },
+            {
+                path: 'idDetallePedido',
+                model: 'DetallePedido',
+                select: ['descripcionPedido']
+            },
+            {
+                path: 'idLocalAbastecimiento',
+                model: 'LocalAbastecimiento',
+                select: ['localAbastecimiento']
+            }
+        ]
+    })
     res.status(200).send(folio)
 };
-folioController.createFolio = async(req, res) => {
+folioController.createFolio = async (req, res) => {
     const errores = [];
     const { numeroFolio, ruta, nombre, dni, telefono, direccion, fechaEntrega, latitud, longitud, distrito, ordenEntrega, inicioVisita, finVisita, descripcionPedido, localAbastecimiento } = req.body;
     const folio = await Folio.findOne({ numeroFolio: req.body.numeroFolio });
@@ -98,7 +103,7 @@ folioController.createFolio = async(req, res) => {
         res.status(201).send({ type: 'success', message: 'Folio creado' })
     }
 };
-folioController.getFolio = async(req, res) => {
+folioController.getFolio = async (req, res) => {
     const r = await Folio.findOne({ _id: req.params.id })
         .populate({
             path: 'idDetalleCliente',
@@ -109,15 +114,15 @@ folioController.getFolio = async(req, res) => {
             path: 'idDetalleEntrega',
             model: 'DetalleEntrega',
             populate: [{
-                    path: 'idUbicacionEntrega',
-                    model: 'UbicacionEntrega',
-                    select: ['latitud', 'longitud', 'distrito']
-                },
-                {
-                    path: 'idHorarioVisita',
-                    model: 'HorarioVisita',
-                    select: ['inicioVisita', 'finVisita']
-                },
+                path: 'idUbicacionEntrega',
+                model: 'UbicacionEntrega',
+                select: ['latitud', 'longitud', 'distrito']
+            },
+            {
+                path: 'idHorarioVisita',
+                model: 'HorarioVisita',
+                select: ['inicioVisita', 'finVisita']
+            },
             ],
             select: ['fechaEntrega', 'idUbicacionEntrega', 'ordenEntrega', 'idHorarioVisita']
         })
@@ -133,7 +138,7 @@ folioController.getFolio = async(req, res) => {
         })
     res.status(200).send(r)
 };
-folioController.updateFolio = async(req, res) => {
+folioController.updateFolio = async (req, res) => {
     const errores = [];
     const { numeroFolio, ruta, nombre, dni, telefono, direccion, fechaEntrega, latitud, longitud, distrito, ordenEntrega, inicioVisita, finVisita, descripcionPedido, localAbastecimiento } = req.body;
     const folio = await Folio.findOne({ _id: req.params.id })
@@ -190,7 +195,7 @@ folioController.updateFolio = async(req, res) => {
         res.status(204).send({ type: 'success', message: 'Folio actualizado' })
     }
 };
-folioController.deleteFolio = async(req, res) => {
+folioController.deleteFolio = async (req, res) => {
     const folio = await Folio.findOne({ _id: req.params.id })
     const detalleentrega = await DetalleEntrega.findOne({ _id: folio.idDetalleEntrega })
     await UbicacionEntrega.findByIdAndDelete(detalleentrega.idUbicacionEntrega)
@@ -202,7 +207,7 @@ folioController.deleteFolio = async(req, res) => {
     await Folio.findByIdAndDelete(req.params.id)
     res.status(204).send({ type: 'success', message: 'Folio borrado' })
 };
-folioController.getRutas = async(req, res) => {
+folioController.getRutas = async (req, res) => {
     const today = moment().startOf('day')
     const rutas = await Folio.find({
         createdAt: {
@@ -212,7 +217,7 @@ folioController.getRutas = async(req, res) => {
     }, { ruta: 1 }).sort({ ruta: 1 }).distinct('ruta')
     res.status(200).send(rutas)
 }
-folioController.cargarFolios = async(req, res) => {
+folioController.cargarFolios = async (req, res) => {
     const { name } = req.body;
     const clientes = [];
     const ubicaciones = [];
@@ -289,69 +294,69 @@ folioController.cargarFolios = async(req, res) => {
     if (errores.length > 0) {
         res.status(409).send({ type: 'error', errores })
     } else {
-        await DetalleCliente.insertMany(clientes).then(function() {
+        await DetalleCliente.insertMany(clientes).then(function () {
             console.log("Data inserted")
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.log(error)
         });
-        await UbicacionEntrega.insertMany(ubicaciones).then(function() {
+        await UbicacionEntrega.insertMany(ubicaciones).then(function () {
             console.log("Data inserted")
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.log(error)
         });
-        await HorarioVisita.insertMany(horarios).then(function() {
+        await HorarioVisita.insertMany(horarios).then(function () {
             console.log("Data inserted")
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.log(error)
         });
-        await DetallePedido.insertMany(pedidos).then(function() {
+        await DetallePedido.insertMany(pedidos).then(function () {
             console.log("Data inserted")
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.log(error)
         });
-        await LocalAbastecimiento.insertMany(locales).then(function() {
+        await LocalAbastecimiento.insertMany(locales).then(function () {
             console.log("Data inserted")
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.log(error)
         });
-        await DetalleEntrega.insertMany(entregas).then(function() {
+        await DetalleEntrega.insertMany(entregas).then(function () {
             console.log("Data inserted")
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.log(error)
         });
-        await Folio.insertMany(folios).then(function() {
+        await Folio.insertMany(folios).then(function () {
             console.log("Data inserted")
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.log(error)
         });
         res.status(201).send({ type: 'success', message: 'Folios creados' })
     }
 }
-folioController.getFoliosActuales = async(req, res) => {
+folioController.getFoliosActuales = async (req, res) => {
     const today = moment().startOf('day')
     const rutas = await Folio.find({
-            createdAt: {
-                $gte: today.toDate(),
-                $lte: moment(today).endOf('day').toDate()
-            }
-        }).populate({
-            path: 'idDetalleCliente',
-            model: 'DetalleCliente',
-            select: ['nombre', 'dni', 'telefono', 'direccion']
-        })
+        createdAt: {
+            $gte: today.toDate(),
+            $lte: moment(today).endOf('day').toDate()
+        }
+    }).populate({
+        path: 'idDetalleCliente',
+        model: 'DetalleCliente',
+        select: ['nombre', 'dni', 'telefono', 'direccion']
+    })
         .populate({
             path: 'idDetalleEntrega',
             model: 'DetalleEntrega',
             populate: [{
-                    path: 'idUbicacionEntrega',
-                    model: 'UbicacionEntrega',
-                    select: ['latitud', 'longitud', 'distrito']
-                },
-                {
-                    path: 'idHorarioVisita',
-                    model: 'HorarioVisita',
-                    select: ['inicioVisita', 'finVisita']
-                },
+                path: 'idUbicacionEntrega',
+                model: 'UbicacionEntrega',
+                select: ['latitud', 'longitud', 'distrito']
+            },
+            {
+                path: 'idHorarioVisita',
+                model: 'HorarioVisita',
+                select: ['inicioVisita', 'finVisita']
+            },
             ],
             select: ['fechaEntrega', 'idUbicacionEntrega', 'ordenEntrega', 'idHorarioVisita']
         })

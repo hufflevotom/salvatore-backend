@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose')
+const mongoosePaginate = require('mongoose-paginate-v2')
 const folioSchema = new Schema({
     numeroFolio: { type: String, required: true },
     ruta: { type: String, required: true },
@@ -22,4 +23,7 @@ const folioSchema = new Schema({
     timestamps: true,
     versionKey: false,
 })
+
+folioSchema.plugin(mongoosePaginate);
+
 module.exports = model("Folio", folioSchema);
